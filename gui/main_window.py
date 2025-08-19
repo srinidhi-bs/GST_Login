@@ -61,6 +61,9 @@ class MainWindow:
         self.current_returns_options = ReturnsDashboardOptions()
         self.current_credit_ledger_options = CreditLedgerOptions()
         
+        # Keep reference to GST service to prevent garbage collection
+        self.current_gst_service = None
+        
         # Create GUI components
         self._create_components()
         
@@ -163,6 +166,14 @@ class MainWindow:
             command=self.status_logger.clear_log
         )
         self.clear_log_button.pack(side="left", padx=5)
+        
+        # Close browser button
+        self.close_browser_button = ttk.Button(
+            self.control_frame,
+            text="Close Browser",
+            command=self._close_browser
+        )
+        self.close_browser_button.pack(side="left", padx=5)
         
         # Quit button
         self.quit_button = ttk.Button(
@@ -388,14 +399,14 @@ class MainWindow:
             config (AutomationConfig): Complete automation configuration
         """
         try:
-            # Create GST portal service
-            gst_service = GSTPortalService(
+            # Create GST portal service and store reference to prevent garbage collection
+            self.current_gst_service = GSTPortalService(
                 status_callback=self.status_logger.log_info,
                 headless=False
             )
             
             # Execute automation workflow
-            success = gst_service.execute_automation_workflow(
+            success = self.current_gst_service.execute_automation_workflow(
                 credentials=config.credentials,
                 settings=config.automation_settings,
                 returns_options=config.returns_options,
@@ -425,6 +436,21 @@ class MainWindow:
         finally:
             # Re-enable start button
             self.root.after(0, self._reset_start_button)
+    
+    def _close_browser(self) -> None:
+        """
+        Manually close the browser if it's open.
+        This allows users to close the browser without closing the application.
+        """
+        try:
+            if self.current_gst_service:
+                self.current_gst_service.close_webdriver()
+                self.current_gst_service = None
+                self.status_logger.log_info("Browser closed successfully.")
+            else:
+                self.status_logger.log_warning("No active browser session to close.")
+        except Exception as e:
+            self.status_logger.log_error(f"Error closing browser: {str(e)}")
     
     def _reset_start_button(self) -> None:
         """Reset the start button state (called from main thread)."""
@@ -463,6 +489,15 @@ Ensure ChromeDriver is present in the chromedriver-linux64 directory."""
         """Handle window close event."""
         try:
             self.status_logger.log_info("Application shutting down...")
+            
+            # Close browser if it's still open
+            if self.current_gst_service:
+                try:
+                    self.current_gst_service.close_webdriver()
+                    self.status_logger.log_info("Browser closed.")
+                except:
+                    pass  # Ignore errors if browser is already closed
+                    
             self.root.quit()
             self.root.destroy()
         except Exception as e:
