@@ -13,7 +13,7 @@ from typing import List, Dict, Any
 # === Application Information ===
 APP_TITLE = "GST Portal Automation - Srinidhi B S"
 APP_VERSION = "2.0.0"
-APP_GEOMETRY = "600x780"
+APP_GEOMETRY = "1000x700"
 AUTHOR_EMAIL = "mailsrinidhibs@gmail.com"
 GITHUB_URL = "https://github.com/srinidhi-bs/GST_Login"
 

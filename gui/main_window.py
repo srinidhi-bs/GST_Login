@@ -75,27 +75,44 @@ class MainWindow:
         self.root.title(APP_TITLE)
         self.root.geometry(APP_GEOMETRY)
         
-        # Prevent window from being too small
-        self.root.minsize(600, 700)
+        # Prevent window from being too small (wider for two-column layout)
+        self.root.minsize(800, 600)
         
         # Configure window closing behavior
         self.root.protocol("WM_DELETE_WINDOW", self._on_window_close)
     
     def _create_components(self) -> None:
         """Create all GUI components."""
+        # Create main container with two columns first
+        self.main_container = ttk.Frame(self.root)
+        self.main_container.pack(fill="both", expand=True, padx=10, pady=10)
+        
+        # Configure grid weights for responsive layout
+        self.main_container.grid_columnconfigure(0, weight=1, minsize=400)  # Left column for controls
+        self.main_container.grid_columnconfigure(1, weight=1, minsize=400)  # Right column for log
+        self.main_container.grid_rowconfigure(0, weight=1)
+        
+        # Create left frame for controls
+        self.left_frame = ttk.Frame(self.main_container)
+        self.left_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+        
+        # Create right frame for log
+        self.right_frame = ttk.Frame(self.main_container)
+        self.right_frame.grid(row=0, column=1, sticky="nsew")
+        
         # Status logger (create first as other components may need to log)
-        self.status_logger = StatusLogger(self.root, height=8)
+        self.status_logger = StatusLogger(self.right_frame, height=15)
         
         # Client selection component
         self.client_selection = ClientSelectionComponent(
-            self.root,
+            self.left_frame,
             on_client_selected=self._on_client_selected,
             status_callback=self.status_logger.log_message
         )
         
         # Credentials form component
         self.credentials_form = CredentialsForm(
-            self.root,
+            self.left_frame,
             on_credentials_changed=self._on_credentials_changed
         )
         
@@ -105,20 +122,20 @@ class MainWindow:
         
         # Action selection component
         self.action_selection = ActionSelectionComponent(
-            self.root,
+            self.left_frame,
             on_actions_changed=self._on_actions_changed,
             status_callback=self.status_logger.log_message
         )
         
         # Returns options component (initially hidden)
         self.returns_options = ReturnsOptionsComponent(
-            self.root,
+            self.left_frame,
             on_options_changed=self._on_returns_options_changed
         )
         
         # Credit ledger options component (initially hidden)
         self.credit_ledger_options = CreditLedgerOptionsComponent(
-            self.root,
+            self.left_frame,
             on_options_changed=self._on_credit_ledger_options_changed
         )
         
@@ -128,7 +145,7 @@ class MainWindow:
     def _create_control_buttons(self) -> None:
         """Create the main control buttons."""
         # Control buttons frame
-        self.control_frame = ttk.Frame(self.root)
+        self.control_frame = ttk.Frame(self.left_frame)
         
         # Start automation button
         self.start_button = ttk.Button(
@@ -165,15 +182,17 @@ class MainWindow:
     
     def _setup_component_interactions(self) -> None:
         """Set up interactions between components."""
-        # Pack all components in the correct order
-        self.client_selection.pack(padx=10, pady=10, fill="x")
-        self.credentials_form.pack(padx=10, pady=10, fill="x")
-        self.action_selection.pack(padx=10, pady=10, fill="x")
+        # Pack components in left frame (components are already created with proper parents)
+        self.client_selection.pack(padx=0, pady=10, fill="x")
+        self.credentials_form.pack(padx=0, pady=10, fill="x")
+        self.action_selection.pack(padx=0, pady=10, fill="x")
         
-        # Returns and Credit Ledger options will be packed/unpacked dynamically
+        # Returns and Credit Ledger options will be packed/unpacked dynamically in left frame
         
-        self.control_frame.pack(padx=10, pady=15, fill="x")
-        self.status_logger.pack(padx=10, pady=10, fill="both", expand=True)
+        self.control_frame.pack(padx=0, pady=15, fill="x")
+        
+        # Pack status logger in right frame with full expansion
+        self.status_logger.pack(fill="both", expand=True)
     
     def _initialize_ui_state(self) -> None:
         """Initialize the UI state and component visibility."""
@@ -246,8 +265,8 @@ class MainWindow:
         # Show/hide returns options based on action selection
         if self.action_selection.requires_returns_dashboard_options():
             if not self.returns_options.is_visible():
-                # Pack before control frame
-                self.returns_options.pack(padx=10, pady=5, fill="x", before=self.control_frame)
+                # Pack before control frame (components already have proper parent)
+                self.returns_options.pack(padx=0, pady=5, fill="x", before=self.control_frame)
         else:
             if self.returns_options.is_visible():
                 self.returns_options.pack_forget()
@@ -255,13 +274,8 @@ class MainWindow:
         # Show/hide credit ledger options based on action selection
         if self.action_selection.requires_credit_ledger_options():
             if not self.credit_ledger_options.is_visible():
-                # Pack before control frame (and after returns options if visible)
-                anchor_widget = self.control_frame
-                if self.returns_options.is_visible():
-                    # Pack after returns options
-                    self.credit_ledger_options.pack(padx=10, pady=5, fill="x", before=self.control_frame)
-                else:
-                    self.credit_ledger_options.pack(padx=10, pady=5, fill="x", before=self.control_frame)
+                # Pack before control frame (components already have proper parent)
+                self.credit_ledger_options.pack(padx=0, pady=5, fill="x", before=self.control_frame)
         else:
             if self.credit_ledger_options.is_visible():
                 self.credit_ledger_options.pack_forget()
