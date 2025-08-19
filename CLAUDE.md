@@ -8,7 +8,7 @@
 **GUI Framework**: Tkinter  
 **Automation Tool**: Selenium WebDriver  
 
-## Current Status (January 2025)
+## Current Status (August 2025)
 - ✅ **Core Application Complete**: Fully functional GST automation GUI
 - ✅ **Excel Integration**: Client data loading with validation
 - ✅ **Multi-action Support**: Login, Returns Dashboard, GSTR-2B, Credit/Cash Ledger
@@ -16,15 +16,46 @@
 - ✅ **Documentation**: Extensive code comments and README.md
 - ✅ **Git Repository**: Initialized with proper .gitignore
 - ✅ **Code Cleanup**: Directory cleaned and organized
+- ✅ **MAJOR REFACTORING**: Modular architecture with separation of concerns (v2.0.0)
 
-## Technical Architecture
+## Technical Architecture (v2.0.0 - Refactored)
 
-### Core Components
-1. **GSTAutomationApp Class**: Main application class with GUI and automation logic
-2. **Excel Handler**: Pandas-based client data loading with column validation
-3. **WebDriver Manager**: Auto-managed ChromeDriver with download preferences
-4. **Threading**: Non-blocking automation execution
-5. **Fallback Locators**: Multiple element finding strategies for robustness
+### Core Architecture Principles
+- **Separation of Concerns**: Clear separation between GUI, business logic, and data layers
+- **Modular Design**: Independent, reusable components with well-defined interfaces
+- **Dependency Injection**: Components receive dependencies rather than creating them
+- **Single Responsibility**: Each module has a single, well-defined purpose
+- **Extensibility**: Easy to add new features and modify existing functionality
+
+### Refactored Components
+
+#### Configuration Layer (`config/`)
+- **settings.py**: Centralized configuration, constants, and locator strategies
+- All timeouts, URLs, and element locators in one place for easy maintenance
+
+#### Data Models (`models/`)
+- **client_data.py**: Data classes for credentials, settings, and options
+- Type-safe data structures with validation methods
+- Clean separation between data and business logic
+
+#### Service Layer (`services/`)
+- **excel_service.py**: Dedicated Excel file handling with comprehensive validation
+- **web_automation_service.py**: Base WebDriver management and common automation utilities
+- **gst_portal_service.py**: GST-specific automation workflows and business logic
+
+#### User Interface (`gui/`)
+- **main_window.py**: Main application coordinator and workflow management
+- **components/**: Reusable, modular GUI components
+  - `status_logger.py`: Status logging with colored output and file export
+  - `client_selection.py`: Excel browsing and client selection
+  - `credentials_form.py`: Username/password input with validation
+  - `action_selection.py`: Automation action checkboxes with dependencies
+  - `returns_options.py`: Returns Dashboard filtering options
+  - `credit_ledger_options.py`: Date range selection for Credit Ledger
+
+#### Utility Layer (`utils/`)
+- **logging_utils.py**: Advanced logging with colors, file rotation, and debugging tools
+- **validation_utils.py**: Comprehensive input validation with detailed error reporting
 
 ### Key Design Decisions
 - **Tkinter over PyQt/Kivy**: Chosen for simplicity and no external dependencies
@@ -32,17 +63,47 @@
 - **Multiple Locator Strategy**: CSS selectors, XPath, and absolute paths for reliability
 - **Excel Format**: Standardized columns: "Client Name", "GST Username", "GST Password"
 - **Download Management**: Dedicated GST_Downloads folder with auto-creation
+- **Modular GUI Components**: Reusable UI elements with callback-based communication
+- **Service-Oriented Architecture**: Business logic separated from presentation layer
 
-### File Structure
+### File Structure (v2.0.0)
 ```
 GST_Login/
-├── gst_automation_app.py    # Main application file (594 lines, fully commented)
-├── GST.bat                  # Windows batch launcher
-├── clients.xlsx             # Client data (gitignored for security)
-├── GST_Downloads/           # Auto-created download directory
-├── README.md               # Public documentation
-├── CLAUDE.md               # This file - development notes
-└── .gitignore              # Git ignore rules
+├── main.py                    # Application entry point with CLI options
+├── config/
+│   ├── __init__.py
+│   └── settings.py           # Centralized configuration and constants
+├── models/
+│   ├── __init__.py
+│   └── client_data.py        # Data models and structures
+├── services/
+│   ├── __init__.py
+│   ├── excel_service.py      # Excel file operations
+│   ├── web_automation_service.py  # Base WebDriver automation
+│   └── gst_portal_service.py # GST-specific automation logic
+├── gui/
+│   ├── __init__.py
+│   ├── main_window.py        # Main application window
+│   └── components/           # Modular GUI components
+│       ├── __init__.py
+│       ├── status_logger.py
+│       ├── client_selection.py
+│       ├── credentials_form.py
+│       ├── action_selection.py
+│       ├── returns_options.py
+│       └── credit_ledger_options.py
+├── utils/
+│   ├── __init__.py
+│   ├── logging_utils.py      # Advanced logging utilities
+│   └── validation_utils.py   # Input validation framework
+├── clients.xlsx              # Client data (gitignored for security)
+├── GST_Downloads/            # Auto-created download directory
+├── logs/                     # Application logs with rotation
+├── chromedriver-linux64/     # ChromeDriver executable
+├── gst_automation_app.pyw    # Legacy monolithic version (kept as backup)
+├── README.md                 # Public documentation
+├── CLAUDE.md                 # This file - development notes
+└── .gitignore               # Git ignore rules
 ```
 
 ## Features Implemented
@@ -74,6 +135,37 @@ GST_Login/
 - Screenshot capture on critical failures
 - Comprehensive exception handling
 - Silent mode for automated operations
+
+## Refactoring Benefits (v2.0.0)
+
+### Architecture Improvements
+- **Maintainability**: Code is now organized into logical modules with single responsibilities
+- **Testability**: Service layer can be tested independently of GUI components
+- **Reusability**: GUI components can be reused in other projects or contexts
+- **Extensibility**: Easy to add new automation actions or GUI elements
+- **Debugging**: Enhanced logging with multiple levels and file output
+- **Configuration**: Centralized settings make it easy to adjust behavior
+
+### New Features in v2.0.0
+- **Command Line Interface**: Options for logging level, headless mode, and debug mode
+- **Advanced Logging**: Colored console output, file rotation, and debug utilities
+- **Enhanced Validation**: Comprehensive input validation with detailed error messages
+- **Modular GUI**: Each UI section is now a reusable component
+- **Better Error Handling**: Structured exception handling with user-friendly messages
+- **Configuration Management**: All settings centralized in one location
+
+### Developer Experience Improvements
+- **Code Documentation**: Extensive docstrings and type hints throughout
+- **Separation of Concerns**: Clear boundaries between different application layers
+- **Import Structure**: Clean import hierarchy with proper package organization
+- **Error Reporting**: Detailed error messages with context for debugging
+- **Logging Framework**: Advanced logging utilities for development and production
+
+### Backward Compatibility
+- **Legacy Support**: Original `gst_automation_app.pyw` preserved as backup
+- **Same Functionality**: All original features remain exactly the same
+- **Excel Format**: No changes to client data file format
+- **User Interface**: Familiar GUI layout with improved organization
 
 ## Technical Specifications
 
@@ -166,11 +258,44 @@ webdriver-manager # Auto ChromeDriver management
 - Verify download folder permissions
 - Check firewall/proxy settings
 
+## Running the Application (v2.0.0)
+
+### Quick Start
+```bash
+# Run the application with default settings
+python3 main.py
+
+# Run with debug logging
+python3 main.py --debug
+
+# Run in headless mode (no browser window)
+python3 main.py --headless
+
+# View all available options
+python3 main.py --help
+```
+
+### Command Line Options
+- `--log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}`: Set logging level
+- `--log-file LOG_FILE`: Specify custom log file path
+- `--no-file-logging`: Disable file logging (console only)
+- `--headless`: Run browser in headless mode
+- `--debug`: Enable debug mode with verbose logging
+- `--version`: Show application version
+
+### Migration from v1.0
+1. **Backup**: Original `gst_automation_app.pyw` is preserved automatically
+2. **No Changes Needed**: Client Excel files work exactly the same
+3. **Same Interface**: GUI layout remains familiar
+4. **Enhanced Features**: Additional logging and error handling
+5. **Run**: Use `python3 main.py` instead of `python3 gst_automation_app.pyw`
+
 ## Contact & Collaboration
 - **Developer**: Srinidhi B S (mailsrinidhibs@gmail.com)
 - **GitHub**: [@srinidhi-bs](https://github.com/srinidhi-bs)
 - **Repository**: https://github.com/srinidhi-bs/GST_Login
 
 ---
-*Last Updated: July 19, 2025*  
+*Last Updated: August 18, 2025*  
+*Major refactoring completed - v2.0.0 with modular architecture*  
 *This file tracks development context and decisions for the GST Automation project.*
