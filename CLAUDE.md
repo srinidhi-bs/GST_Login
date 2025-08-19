@@ -17,6 +17,7 @@
 - ✅ **Git Repository**: Initialized with proper .gitignore
 - ✅ **Code Cleanup**: Directory cleaned and organized
 - ✅ **MAJOR REFACTORING**: Modular architecture with separation of concerns (v2.0.0)
+- ✅ **UI ENHANCEMENT**: Two-column responsive layout with improved visibility (v2.0.1)
 
 ## Technical Architecture (v2.0.0 - Refactored)
 
@@ -44,7 +45,7 @@
 - **gst_portal_service.py**: GST-specific automation workflows and business logic
 
 #### User Interface (`gui/`)
-- **main_window.py**: Main application coordinator and workflow management
+- **main_window.py**: Main application coordinator and workflow management with **two-column responsive layout**
 - **components/**: Reusable, modular GUI components
   - `status_logger.py`: Status logging with colored output and file export
   - `client_selection.py`: Excel browsing and client selection
@@ -52,6 +53,16 @@
   - `action_selection.py`: Automation action checkboxes with dependencies
   - `returns_options.py`: Returns Dashboard filtering options
   - `credit_ledger_options.py`: Date range selection for Credit Ledger
+
+#### UI Layout Enhancement (v2.0.1)
+- **Two-Column Design**: Responsive grid layout with equal-weight columns
+- **Left Column**: All controls (client selection, credentials, actions, buttons) - 400px minimum width
+- **Right Column**: Dedicated status log window with full expansion - 400px minimum width
+- **Window Sizing**: Default 1000x700, minimum 800x600 for optimal two-column viewing
+- **Log Area**: Enlarged from 8 to 15 lines for better readability and monitoring
+- **Spacing**: 10px padding between columns for clean separation
+- **Always Visible Log**: Status messages remain visible during automation without scrolling issues
+- **Responsive Layout**: Both columns resize proportionally with window resizing
 
 #### Utility Layer (`utils/`)
 - **logging_utils.py**: Advanced logging with colors, file rotation, and debugging tools
@@ -65,6 +76,7 @@
 - **Download Management**: Dedicated GST_Downloads folder with auto-creation
 - **Modular GUI Components**: Reusable UI elements with callback-based communication
 - **Service-Oriented Architecture**: Business logic separated from presentation layer
+- **Two-Column UI Layout**: Controls on left, log on right for simultaneous monitoring and control
 
 ### File Structure (v2.0.0)
 ```
@@ -218,6 +230,14 @@ webdriver-manager # Auto ChromeDriver management
 - Error handling improvements
 - Code structure optimization
 
+### Phase 3: UI Enhancement (August 2025)
+- Two-column responsive layout implementation
+- Status log moved to dedicated right column for always-visible monitoring
+- Window size optimized for wider layout (1000x700 default, 800x600 minimum)
+- Log area enlarged from 8 to 15 lines for better readability
+- Fixed component parent reference issues preventing blank window display
+- Improved user workflow with simultaneous control and log viewing
+
 ## Future Enhancement Ideas
 
 ### Priority Features to Consider
@@ -296,6 +316,6 @@ python3 main.py --help
 - **Repository**: https://github.com/srinidhi-bs/GST_Login
 
 ---
-*Last Updated: August 18, 2025*  
-*Major refactoring completed - v2.0.0 with modular architecture*  
+*Last Updated: August 19, 2025*  
+*UI Enhancement completed - v2.0.1 with two-column responsive layout*  
 *This file tracks development context and decisions for the GST Automation project.*
