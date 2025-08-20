@@ -29,7 +29,7 @@ from config.settings import (
     CHROMEDRIVER_RELATIVE_PATH, DOWNLOAD_FOLDER_NAME,
     CHROME_DOWNLOAD_PREFERENCES, CHROME_OPTIONS,
     SAVE_SCREENSHOTS_ON_ERROR, SCREENSHOT_PREFIX,
-    PLATFORM_DISPLAY_NAME, CHROMEDRIVER_DIRECTORY, IS_WINDOWS
+    PLATFORM_DISPLAY_NAME, CHROMEDRIVER_DIRECTORY, IS_EFFECTIVE_WINDOWS
 )
 
 # Set up logging for this module
@@ -89,9 +89,8 @@ class WebAutomationService:
         if not os.path.exists(chromedriver_path):
             # Create platform-specific error message with setup guidance
             platform_name = PLATFORM_DISPLAY_NAME
-            chromedriver_exe = "chromedriver.exe" if IS_WINDOWS else "chromedriver"
-            download_url = ("https://chromedriver.chromium.org/downloads" if IS_WINDOWS 
-                          else "https://chromedriver.chromium.org/downloads")
+            chromedriver_exe = "chromedriver.exe" if IS_EFFECTIVE_WINDOWS else "chromedriver"
+            download_url = "https://chromedriver.chromium.org/downloads"
             
             error_msg = (
                 f"ChromeDriver not found for {platform_name} at: {chromedriver_path}\n\n"

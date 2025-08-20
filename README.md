@@ -59,6 +59,29 @@ pip install selenium pandas
 
 **Note**: The application automatically detects your platform and uses the appropriate ChromeDriver.
 
+## 🚀 **Streamlined Development Workflow**
+
+For developers using WSL who want to run on Windows, we provide a streamlined workflow:
+
+### **Quick Start (WSL → Windows)**
+```bash
+# Clone to shared directory
+git clone https://github.com/srinidhi-bs/GST_Login.git /mnt/c/Development/GST_Login
+cd /mnt/c/Development/GST_Login
+
+# One-time Windows setup
+./setup-windows.sh
+
+# Test on Windows from WSL
+./run-on-windows.sh
+```
+
+### **Native Windows Users**
+1. Navigate to `C:\Development\GST_Login\`
+2. Double-click `run-app.bat`
+
+📖 **See [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) for detailed documentation**
+
 ## Usage
 
 ### Excel File Format

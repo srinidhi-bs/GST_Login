@@ -25,11 +25,21 @@ IS_WINDOWS = CURRENT_PLATFORM == "windows"
 IS_LINUX = CURRENT_PLATFORM == "linux"
 IS_WSL = IS_LINUX and "microsoft" in platform.uname().release.lower()
 
-# Platform display names for user messaging
-PLATFORM_DISPLAY_NAME = {
-    "windows": "Windows",
-    "linux": "WSL" if IS_WSL else "Linux"
-}.get(CURRENT_PLATFORM, CURRENT_PLATFORM.title())
+# Check for forced Windows mode (when running Windows Python from WSL)
+IS_FORCED_WINDOWS_MODE = os.getenv("GST_FORCE_WINDOWS_MODE") == "1"
+
+# Determine effective platform (what we should behave as)
+if IS_FORCED_WINDOWS_MODE:
+    EFFECTIVE_PLATFORM = "windows"
+    IS_EFFECTIVE_WINDOWS = True
+    PLATFORM_DISPLAY_NAME = "Windows (via WSL)"
+else:
+    EFFECTIVE_PLATFORM = CURRENT_PLATFORM
+    IS_EFFECTIVE_WINDOWS = IS_WINDOWS
+    PLATFORM_DISPLAY_NAME = {
+        "windows": "Windows",
+        "linux": "WSL" if IS_WSL else "Linux"
+    }.get(CURRENT_PLATFORM, CURRENT_PLATFORM.title())
 
 # === File and Directory Paths ===
 DEFAULT_EXCEL_FILENAME = "clients.xlsx"
@@ -38,7 +48,8 @@ DOWNLOAD_FOLDER_NAME = "GST_Downloads"
 # Platform-specific ChromeDriver paths
 # Windows: chromedriver-win64/chromedriver.exe
 # Linux/WSL: chromedriver-linux64/chromedriver  
-if IS_WINDOWS:
+# Use effective platform for path selection
+if IS_EFFECTIVE_WINDOWS:
     CHROMEDRIVER_RELATIVE_PATH = os.path.join("chromedriver-win64", "chromedriver.exe")
     CHROMEDRIVER_DIRECTORY = "chromedriver-win64"
 else:
