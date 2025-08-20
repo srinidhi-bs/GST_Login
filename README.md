@@ -4,7 +4,8 @@ A cross-platform Python GUI application that automates interactions with the GST
 
 **✅ Windows Support**: Native Windows compatibility  
 **✅ Linux/WSL Support**: Full Linux and WSL compatibility  
-**✅ Auto-Detection**: Automatically detects platform and uses appropriate ChromeDriver
+**✅ Auto-Detection**: Automatically detects platform and uses appropriate ChromeDriver  
+**✅ Auto-Update**: One-click ChromeDriver download and installation
 
 ## Features
 
@@ -15,6 +16,7 @@ A cross-platform Python GUI application that automates interactions with the GST
 - **Electronic Credit Ledger**: Access and view credit ledger with date filtering
 - **Electronic Cash Ledger**: Access and view cash ledger details
 - **Download Management**: Organized downloads in dedicated folder
+- **ChromeDriver Auto-Update**: One-click automatic ChromeDriver installation
 
 ## Prerequisites
 
@@ -45,17 +47,20 @@ source gst_env/bin/activate
 pip install selenium pandas
 ```
 
-4. **Platform-Specific ChromeDriver Setup**:
+4. **ChromeDriver Setup (Auto or Manual)**:
 
-**For Windows:**
-- Download ChromeDriver from: https://chromedriver.chromium.org/downloads
-- Extract `chromedriver.exe` to `chromedriver-win64/` directory
-- Ensure version matches your Chrome browser
+**🚀 Automatic Setup (Recommended):**
+```bash
+# Run the application
+python3 main.py
 
-**For Linux/WSL:**
-- Download ChromeDriver from: https://chromedriver.chromium.org/downloads  
-- Extract `chromedriver` to `chromedriver-linux64/` directory
-- Make executable: `chmod +x chromedriver-linux64/chromedriver`
+# Click "Update ChromeDriver" button in the app
+# The app will automatically download and install the correct ChromeDriver
+```
+
+**Manual Setup (Alternative):**
+- **Windows**: Download from https://chromedriver.chromium.org/downloads → Extract `chromedriver.exe` to `chromedriver-win64/`
+- **Linux/WSL**: Download from https://chromedriver.chromium.org/downloads → Extract `chromedriver` to `chromedriver-linux64/` → Make executable: `chmod +x chromedriver-linux64/chromedriver`
 
 **Note**: The application automatically detects your platform and uses the appropriate ChromeDriver.
 

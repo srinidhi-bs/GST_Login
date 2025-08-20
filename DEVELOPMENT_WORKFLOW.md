@@ -130,13 +130,18 @@ run-app.bat
 # Make sure to check "Add Python to PATH" during installation
 ```
 
-### **ChromeDriver Missing**
+### **ChromeDriver Missing (Auto-Fix Available!)**
 ```bash
-# Error: ChromeDriver not found for Windows
-# Solution: Download ChromeDriver for Windows
+# 🚀 The easy way: Use the built-in auto-update
+# 1. Run the app (python3 main.py or ./run-on-windows.sh)
+# 2. Click "Update ChromeDriver" button
+# 3. Wait for automatic download and installation
+# 4. Success! ChromeDriver is now ready
+
+# Manual way (if auto-update fails):
 # 1. Go to: https://chromedriver.chromium.org/downloads
-# 2. Download chromedriver-win64.zip
-# 3. Extract chromedriver.exe to chromedriver-win64/
+# 2. Download chromedriver-win64.zip (Windows) or chromedriver-linux64.zip (Linux)
+# 3. Extract chromedriver.exe/chromedriver to appropriate directory
 ```
 
 ### **Virtual Environment Issues**

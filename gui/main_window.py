@@ -26,6 +26,7 @@ from models.client_data import (
 
 # Import services
 from services.gst_portal_service import GSTPortalService
+from services.chromedriver_service import ChromeDriverService
 
 # Import GUI components
 from gui.components.status_logger import StatusLogger
@@ -167,6 +168,14 @@ class MainWindow:
             command=self.status_logger.clear_log
         )
         self.clear_log_button.pack(side="left", padx=5)
+        
+        # Update ChromeDriver button
+        self.update_chromedriver_button = ttk.Button(
+            self.control_frame,
+            text="Update ChromeDriver",
+            command=self._update_chromedriver_thread
+        )
+        self.update_chromedriver_button.pack(side="left", padx=5)
         
         # Close browser button
         self.close_browser_button = ttk.Button(
@@ -459,6 +468,85 @@ class MainWindow:
         self.start_button.config(state="normal")
         self.start_button.config(text="Start Automation")
     
+    def _update_chromedriver_thread(self) -> None:
+        """Start the ChromeDriver update process in a separate thread."""
+        # Disable the update button to prevent multiple updates
+        self.update_chromedriver_button.config(state="disabled")
+        self.update_chromedriver_button.config(text="Updating...")
+        
+        # Log update start
+        self.status_logger.log_info("🚀 Starting ChromeDriver update...")
+        
+        # Start update in separate thread
+        update_thread = threading.Thread(
+            target=self._run_chromedriver_update,
+            daemon=True
+        )
+        update_thread.start()
+    
+    def _run_chromedriver_update(self) -> None:
+        """
+        Run the ChromeDriver update process in a separate thread.
+        """
+        try:
+            # Create ChromeDriver service
+            chromedriver_service = ChromeDriverService(
+                status_callback=self.status_logger.log_info
+            )
+            
+            # Check current status
+            is_available, status_message = chromedriver_service.check_chromedriver_status()
+            if is_available:
+                self.status_logger.log_info(f"ℹ️ Current status: {status_message}")
+            else:
+                self.status_logger.log_warning(f"⚠️ Current status: {status_message}")
+            
+            # Perform the update
+            success = chromedriver_service.update_chromedriver()
+            
+            if success:
+                self.status_logger.log_success("✅ ChromeDriver update completed successfully!")
+                
+                # Check new status
+                is_available, status_message = chromedriver_service.check_chromedriver_status()
+                if is_available:
+                    self.status_logger.log_success(f"✅ New status: {status_message}")
+                
+                # Show success message
+                self.root.after(0, lambda: messagebox.showinfo(
+                    "ChromeDriver Update", 
+                    "ChromeDriver has been updated successfully!\n\n"
+                    "You can now use the automation features."
+                ))
+            else:
+                self.status_logger.log_error("❌ ChromeDriver update failed")
+                
+                # Show error message
+                self.root.after(0, lambda: messagebox.showerror(
+                    "ChromeDriver Update Failed", 
+                    "Failed to update ChromeDriver.\n\n"
+                    "Please check the status log for details and try again."
+                ))
+        
+        except Exception as e:
+            error_message = f"ChromeDriver update failed with error: {str(e)}"
+            self.status_logger.log_error(error_message)
+            
+            # Show error message
+            self.root.after(0, lambda: messagebox.showerror(
+                "ChromeDriver Update Error", 
+                f"An error occurred during ChromeDriver update:\n\n{str(e)}"
+            ))
+            
+        finally:
+            # Re-enable update button
+            self.root.after(0, self._reset_chromedriver_button)
+    
+    def _reset_chromedriver_button(self) -> None:
+        """Reset the ChromeDriver update button state (called from main thread)."""
+        self.update_chromedriver_button.config(state="normal")
+        self.update_chromedriver_button.config(text="Update ChromeDriver")
+    
     def _show_about_dialog(self) -> None:
         """Show the about dialog."""
         about_text = f"""GST Portal Automation Application
@@ -479,11 +567,12 @@ This application automates GST portal interactions including:
 • Returns Dashboard navigation and filtering
 • GSTR-2B report downloads
 • Electronic Credit and Cash Ledger access
+• Automatic ChromeDriver updates with one click
 
 Built with Python, Tkinter, and Selenium WebDriver.
 
 Note: This tool requires manual CAPTCHA entry during login.
-Download appropriate ChromeDriver from: https://chromedriver.chromium.org/downloads"""
+Use the "Update ChromeDriver" button to automatically download and install ChromeDriver."""
         
         messagebox.showinfo("About GST Automation", about_text)
     
