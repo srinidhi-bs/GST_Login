@@ -2,7 +2,17 @@
 
 This directory should contain the ChromeDriver executable for Windows support.
 
-## Setup Instructions
+## 🚀 Easy Setup (Recommended)
+
+**Use the app's auto-update feature:**
+1. Run the GST Automation app
+2. Click "Update ChromeDriver" button  
+3. Wait for automatic download and installation
+4. Done! ChromeDriver is ready to use
+
+## Manual Setup (Alternative)
+
+If auto-update doesn't work, you can install manually:
 
 1. **Download ChromeDriver for Windows**:
    - Visit: https://chromedriver.chromium.org/downloads
@@ -27,8 +37,8 @@ chromedriver-win64/
 
 ## Troubleshooting
 
-- **ChromeDriver not found**: Ensure `chromedriver.exe` is in this exact directory
-- **Version mismatch**: Download ChromeDriver version that matches your Chrome browser
+- **ChromeDriver not found**: Try the "Update ChromeDriver" button first! If that fails, ensure `chromedriver.exe` is in this exact directory
+- **Version mismatch**: Use "Update ChromeDriver" button for automatic version matching, or manually download ChromeDriver version that matches your Chrome browser
 - **Permissions**: ChromeDriver should be executable (Windows usually handles this automatically)
 
 ## Cross-Platform Note

@@ -94,7 +94,9 @@ class WebAutomationService:
             
             error_msg = (
                 f"ChromeDriver not found for {platform_name} at: {chromedriver_path}\n\n"
-                f"To fix this:\n"
+                f"🚀 EASY FIX: Use the 'Update ChromeDriver' button in the app!\n"
+                f"   The app will automatically download and install the correct ChromeDriver.\n\n"
+                f"Manual alternative (if auto-update fails):\n"
                 f"1. Download ChromeDriver for {platform_name} from: {download_url}\n"
                 f"2. Extract {chromedriver_exe} to: {os.path.join(script_dir, CHROMEDRIVER_DIRECTORY)}/\n"
                 f"3. Ensure the file is executable (Linux/WSL: chmod +x {chromedriver_exe})"

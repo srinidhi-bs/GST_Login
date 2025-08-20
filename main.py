@@ -165,7 +165,7 @@ def check_system_requirements() -> tuple[bool, Optional[str]]:
         chromedriver_path = os.path.join(current_dir, CHROMEDRIVER_RELATIVE_PATH)
         if not os.path.exists(chromedriver_path):
             logger.warning(f"ChromeDriver not found for {PLATFORM_DISPLAY_NAME} at: {chromedriver_path}")
-            logger.warning(f"Please ensure ChromeDriver is installed in the {CHROMEDRIVER_DIRECTORY} directory")
+            logger.info(f"💡 TIP: Use the 'Update ChromeDriver' button in the app to auto-install ChromeDriver!")
             logger.info(f"Running on: {PLATFORM_DISPLAY_NAME}")
             # This is a warning, not an error, as the user might have ChromeDriver elsewhere
         
