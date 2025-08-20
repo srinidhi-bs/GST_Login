@@ -28,7 +28,8 @@ from config.settings import (
     WAIT_TIME_SHORT, WAIT_TIME_LONG, WAIT_TIME_VERY_LONG,
     CHROMEDRIVER_RELATIVE_PATH, DOWNLOAD_FOLDER_NAME,
     CHROME_DOWNLOAD_PREFERENCES, CHROME_OPTIONS,
-    SAVE_SCREENSHOTS_ON_ERROR, SCREENSHOT_PREFIX
+    SAVE_SCREENSHOTS_ON_ERROR, SCREENSHOT_PREFIX,
+    PLATFORM_DISPLAY_NAME, CHROMEDRIVER_DIRECTORY, IS_WINDOWS
 )
 
 # Set up logging for this module
@@ -70,7 +71,11 @@ class WebAutomationService:
     
     def _get_chromedriver_path(self) -> str:
         """
-        Get the path to the ChromeDriver executable.
+        Get the path to the ChromeDriver executable (platform-aware).
+        
+        Automatically selects the correct ChromeDriver based on the current platform:
+        - Windows: chromedriver-win64/chromedriver.exe
+        - Linux/WSL: chromedriver-linux64/chromedriver
         
         Returns:
             str: Path to ChromeDriver executable
@@ -82,7 +87,20 @@ class WebAutomationService:
         chromedriver_path = os.path.join(script_dir, CHROMEDRIVER_RELATIVE_PATH)
         
         if not os.path.exists(chromedriver_path):
-            error_msg = f"ChromeDriver not found at: {chromedriver_path}"
+            # Create platform-specific error message with setup guidance
+            platform_name = PLATFORM_DISPLAY_NAME
+            chromedriver_exe = "chromedriver.exe" if IS_WINDOWS else "chromedriver"
+            download_url = ("https://chromedriver.chromium.org/downloads" if IS_WINDOWS 
+                          else "https://chromedriver.chromium.org/downloads")
+            
+            error_msg = (
+                f"ChromeDriver not found for {platform_name} at: {chromedriver_path}\n\n"
+                f"To fix this:\n"
+                f"1. Download ChromeDriver for {platform_name} from: {download_url}\n"
+                f"2. Extract {chromedriver_exe} to: {os.path.join(script_dir, CHROMEDRIVER_DIRECTORY)}/\n"
+                f"3. Ensure the file is executable (Linux/WSL: chmod +x {chromedriver_exe})"
+            )
+            
             self.logger.error(error_msg)
             raise WebDriverInitializationError(error_msg)
         

@@ -44,5 +44,9 @@ GST_Downloads/
 debug_*.png
 *.log
 
+# Debug files
+debug_page_source.html
+debug_page_source.py
+
 # Sensitive data
 clients.xlsx

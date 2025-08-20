@@ -8,19 +8,42 @@ without changing code in multiple places.
 Author: Srinidhi B S
 """
 import os
+import platform
 from typing import List, Dict, Any
 
 # === Application Information ===
 APP_TITLE = "GST Portal Automation - Srinidhi B S"
-APP_VERSION = "2.0.0"
+APP_VERSION = "2.1.0"  # Updated for cross-platform support
 APP_GEOMETRY = "1000x700"
 AUTHOR_EMAIL = "mailsrinidhibs@gmail.com"
 GITHUB_URL = "https://github.com/srinidhi-bs/GST_Login"
 
+# === Platform Detection ===
+# Automatically detect the current operating system
+CURRENT_PLATFORM = platform.system().lower()
+IS_WINDOWS = CURRENT_PLATFORM == "windows"
+IS_LINUX = CURRENT_PLATFORM == "linux"
+IS_WSL = IS_LINUX and "microsoft" in platform.uname().release.lower()
+
+# Platform display names for user messaging
+PLATFORM_DISPLAY_NAME = {
+    "windows": "Windows",
+    "linux": "WSL" if IS_WSL else "Linux"
+}.get(CURRENT_PLATFORM, CURRENT_PLATFORM.title())
+
 # === File and Directory Paths ===
 DEFAULT_EXCEL_FILENAME = "clients.xlsx"
 DOWNLOAD_FOLDER_NAME = "GST_Downloads"
-CHROMEDRIVER_RELATIVE_PATH = os.path.join("chromedriver-linux64", "chromedriver")
+
+# Platform-specific ChromeDriver paths
+# Windows: chromedriver-win64/chromedriver.exe
+# Linux/WSL: chromedriver-linux64/chromedriver  
+if IS_WINDOWS:
+    CHROMEDRIVER_RELATIVE_PATH = os.path.join("chromedriver-win64", "chromedriver.exe")
+    CHROMEDRIVER_DIRECTORY = "chromedriver-win64"
+else:
+    CHROMEDRIVER_RELATIVE_PATH = os.path.join("chromedriver-linux64", "chromedriver")
+    CHROMEDRIVER_DIRECTORY = "chromedriver-linux64"
 
 # === Excel Column Names ===
 # Expected column names in the client data Excel file
@@ -227,11 +250,12 @@ class StatusMessages:
     
     # Application startup
     APP_STARTING = "GST Automation Application starting..."
+    PLATFORM_DETECTED = f"Running on {PLATFORM_DISPLAY_NAME} - using {PLATFORM_DISPLAY_NAME} ChromeDriver"
     LOADING_CLIENTS = "Loading clients from Excel file..."
     CLIENTS_LOADED = "Successfully loaded {count} clients."
     
     # WebDriver initialization
-    WEBDRIVER_INIT = "Initializing Chrome WebDriver..."
+    WEBDRIVER_INIT = f"Initializing Chrome WebDriver for {PLATFORM_DISPLAY_NAME}..."
     DOWNLOAD_DIR_CREATED = "Downloads will be saved to: {path}"
     
     # Navigation

@@ -1,6 +1,10 @@
 # GST Portal Automation
 
-A Python GUI application that automates interactions with the GST portal using Selenium WebDriver.
+A cross-platform Python GUI application that automates interactions with the GST portal using Selenium WebDriver.
+
+**✅ Windows Support**: Native Windows compatibility  
+**✅ Linux/WSL Support**: Full Linux and WSL compatibility  
+**✅ Auto-Detection**: Automatically detects platform and uses appropriate ChromeDriver
 
 ## Features
 
@@ -14,8 +18,9 @@ A Python GUI application that automates interactions with the GST portal using S
 
 ## Prerequisites
 
-- Python 3.7+
-- Chrome browser
+- Python 3.8+
+- Chrome browser (any recent version)
+- ChromeDriver (platform-specific setup below)
 - Excel file with client data
 
 ## Installation
@@ -37,8 +42,22 @@ source gst_env/bin/activate
 
 3. Install required packages:
 ```bash
-pip install tkinter selenium pandas webdriver-manager
+pip install selenium pandas
 ```
+
+4. **Platform-Specific ChromeDriver Setup**:
+
+**For Windows:**
+- Download ChromeDriver from: https://chromedriver.chromium.org/downloads
+- Extract `chromedriver.exe` to `chromedriver-win64/` directory
+- Ensure version matches your Chrome browser
+
+**For Linux/WSL:**
+- Download ChromeDriver from: https://chromedriver.chromium.org/downloads  
+- Extract `chromedriver` to `chromedriver-linux64/` directory
+- Make executable: `chmod +x chromedriver-linux64/chromedriver`
+
+**Note**: The application automatically detects your platform and uses the appropriate ChromeDriver.
 
 ## Usage
 

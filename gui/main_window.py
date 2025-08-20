@@ -14,7 +14,8 @@ from typing import Optional
 
 # Import configuration
 from config.settings import (
-    APP_TITLE, APP_GEOMETRY, AUTHOR_EMAIL, GITHUB_URL
+    APP_TITLE, APP_GEOMETRY, AUTHOR_EMAIL, GITHUB_URL,
+    PLATFORM_DISPLAY_NAME, StatusMessages
 )
 
 # Import models
@@ -212,6 +213,7 @@ class MainWindow:
         
         # Log application startup
         self.status_logger.log_info("GST Automation Application started")
+        self.status_logger.log_info(StatusMessages.PLATFORM_DETECTED)
         self.status_logger.log_info(f"Author: Srinidhi B S ({AUTHOR_EMAIL})")
         self.status_logger.log_info(f"GitHub: {GITHUB_URL}")
     
@@ -461,10 +463,15 @@ class MainWindow:
         """Show the about dialog."""
         about_text = f"""GST Portal Automation Application
 
-Version: 2.0.0 (Refactored)
+Version: 2.1.0 (Cross-Platform Support)
 Author: Srinidhi B S
 Email: {AUTHOR_EMAIL}
 GitHub: {GITHUB_URL}
+
+Platform Support:
+• Windows: Uses chromedriver-win64/chromedriver.exe
+• Linux/WSL: Uses chromedriver-linux64/chromedriver
+• Currently running on: {PLATFORM_DISPLAY_NAME}
 
 This application automates GST portal interactions including:
 • Client credential management from Excel files
@@ -476,7 +483,7 @@ This application automates GST portal interactions including:
 Built with Python, Tkinter, and Selenium WebDriver.
 
 Note: This tool requires manual CAPTCHA entry during login.
-Ensure ChromeDriver is present in the chromedriver-linux64 directory."""
+Download appropriate ChromeDriver from: https://chromedriver.chromium.org/downloads"""
         
         messagebox.showinfo("About GST Automation", about_text)
     

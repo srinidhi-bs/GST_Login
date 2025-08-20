@@ -24,7 +24,11 @@ try:
     # Import application components
     from gui.main_window import create_main_window
     from utils.logging_utils import setup_logging, get_logger
-    from config.settings import APP_TITLE, APP_VERSION, AUTHOR_EMAIL, GITHUB_URL
+    from config.settings import (
+        APP_TITLE, APP_VERSION, AUTHOR_EMAIL, GITHUB_URL,
+        PLATFORM_DISPLAY_NAME, CHROMEDRIVER_RELATIVE_PATH, CHROMEDRIVER_DIRECTORY,
+        StatusMessages
+    )
     
 except ImportError as e:
     print(f"Error: Failed to import required modules: {e}")
@@ -107,6 +111,7 @@ def setup_application_logging(args: argparse.Namespace) -> None:
     
     # Log application startup information
     logger.info(f"=== {APP_TITLE} v{APP_VERSION} Starting ===")
+    logger.info(StatusMessages.PLATFORM_DETECTED)
     logger.info(f"Author: Srinidhi B S")
     logger.info(f"Email: {AUTHOR_EMAIL}")
     logger.info(f"GitHub: {GITHUB_URL}")
@@ -156,11 +161,12 @@ def check_system_requirements() -> tuple[bool, Optional[str]]:
         if missing_modules:
             return False, f"Missing required modules: {', '.join(missing_modules)}"
         
-        # Check for ChromeDriver
-        chromedriver_path = os.path.join(current_dir, "chromedriver-linux64", "chromedriver")
+        # Check for ChromeDriver (platform-aware)
+        chromedriver_path = os.path.join(current_dir, CHROMEDRIVER_RELATIVE_PATH)
         if not os.path.exists(chromedriver_path):
-            logger.warning(f"ChromeDriver not found at: {chromedriver_path}")
-            logger.warning("Please ensure ChromeDriver is installed in the chromedriver-linux64 directory")
+            logger.warning(f"ChromeDriver not found for {PLATFORM_DISPLAY_NAME} at: {chromedriver_path}")
+            logger.warning(f"Please ensure ChromeDriver is installed in the {CHROMEDRIVER_DIRECTORY} directory")
+            logger.info(f"Running on: {PLATFORM_DISPLAY_NAME}")
             # This is a warning, not an error, as the user might have ChromeDriver elsewhere
         
         # Check for GST_Downloads directory (create if needed)
