@@ -1,7 +1,5 @@
 @echo off
-REM Windows batch file for GST Automation
-REM Double-click this file to run the GST Automation application on Windows
-REM
+REM Simple Windows batch file for GST Automation
 REM Author: Srinidhi B S
 
 echo.
@@ -16,22 +14,21 @@ cd /d "%~dp0"
 REM Check if Python is installed
 echo [INFO] Checking for Python installation...
 python --version >nul 2>&1
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo [ERROR] Python not found. Trying py command...
     py --version >nul 2>&1
-    if %errorlevel% neq 0 (
+    if errorlevel 1 (
         echo [ERROR] Python is not installed or not in PATH.
         echo Please install Python from https://python.org/downloads/
-        echo Make sure to check "Add Python to PATH" during installation.
         pause
         exit /b 1
     ) else (
         set PYTHON_CMD=py
-        echo [SUCCESS] Found Python using 'py' command
+        echo [SUCCESS] Found Python using py command
     )
 ) else (
     set PYTHON_CMD=python
-    echo [SUCCESS] Found Python using 'python' command
+    echo [SUCCESS] Found Python using python command
 )
 
 REM Display Python version
@@ -44,7 +41,7 @@ if not exist "gst_env\" (
     echo.
     echo [INFO] Virtual environment not found. Creating one...
     %PYTHON_CMD% -m venv gst_env
-    if %errorlevel% neq 0 (
+    if errorlevel 1 (
         echo [ERROR] Failed to create virtual environment.
         pause
         exit /b 1
@@ -55,7 +52,7 @@ if not exist "gst_env\" (
     gst_env\Scripts\python.exe -m pip install --upgrade pip
     gst_env\Scripts\python.exe -m pip install selenium pandas
     
-    if %errorlevel% neq 0 (
+    if errorlevel 1 (
         echo [ERROR] Failed to install dependencies.
         pause
         exit /b 1
@@ -67,14 +64,9 @@ REM Check if ChromeDriver exists
 if not exist "chromedriver-win64\chromedriver.exe" (
     echo.
     echo [WARNING] ChromeDriver not found!
-    echo Please download ChromeDriver for Windows and place it in:
-    echo chromedriver-win64\chromedriver.exe
+    echo Please use the Update ChromeDriver button in the app
+    echo or download manually from: https://chromedriver.chromium.org/downloads
     echo.
-    echo Download from: https://chromedriver.chromium.org/downloads
-    echo Make sure the version matches your Chrome browser.
-    echo.
-    echo Press any key to continue anyway (you'll get an error during execution)...
-    pause
 )
 
 REM Run the application
@@ -83,15 +75,19 @@ echo [INFO] Starting GST Automation Application...
 echo Working Directory: %CD%
 echo.
 
-gst_env\Scripts\python.exe main.py %*
+if "%1"=="" (
+    gst_env\Scripts\python.exe main.py
+) else (
+    gst_env\Scripts\python.exe main.py %1 %2 %3 %4 %5
+)
 
 REM Check exit code
-if %errorlevel% equ 0 (
-    echo.
-    echo [SUCCESS] Application completed successfully!
-) else (
+if errorlevel 1 (
     echo.
     echo [ERROR] Application exited with error code: %errorlevel%
+) else (
+    echo.
+    echo [SUCCESS] Application completed successfully!
 )
 
 echo.

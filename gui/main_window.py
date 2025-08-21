@@ -572,7 +572,7 @@ This application automates GST portal interactions including:
 Built with Python, Tkinter, and Selenium WebDriver.
 
 Note: This tool requires manual CAPTCHA entry during login.
-💡 TIP: Click "Update ChromeDriver" for automatic setup - no manual downloads needed!
+💡 TIP: Click "Update ChromeDriver" for automatic setup - no manual downloads needed!"""
         
         messagebox.showinfo("About GST Automation", about_text)
     
